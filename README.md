@@ -1,47 +1,67 @@
 # Ticker Briefly
 
-A modern React web application for stock market analysis.
+Ticker Briefly is a full-stack AI application that fetches real-time stock data and generates concise, natural-language performance summaries using large language models. The solution is deployed on Cloudflare and secured through Cloudflare AI Gateway to ensure reliable, low-latency, and protected API communication.
 
-## Project Description
+## Overview
 
-Ticker Briefly is a stock market analyzer that provides AI-powered insights on up to 3 stock tickers. Built with React, TypeScript, and TailwindCSS.
+This project demonstrates how to combine real-time financial data with language models to provide actionable summaries in a lightweight, production-oriented architecture. It was built as a portfolio project to showcase LLM orchestration, API integration, secure deployment, and cloud-native development.
 
-## Getting Started
+## Features
 
-### Prerequisites
+- Real-time stock data retrieval for multiple tickers  
+- LLM-generated natural-language summaries  
+- Frontend built with React, backend in Python  
+- API calls routed through **two Cloudflare Workers**:
+  - **Polygon Worker** (with the Polygon API key configured as an environment variable)
+  - **OpenAI Worker** (with the OpenAI API key configured as an environment variable)
+- Ticker-Briefly app uses the worker URLs as environment variables
+- Secured and monitored API routing with Cloudflare AI Gateway  
+- Fully deployed and serverless architecture on Cloudflare Pages
 
-- Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Architecture
 
-### Installation
-
-1. Clone this repository
-2. Install dependencies:
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository.
-# Step 2: Navigate to the project directory.
-# Step 3: Install the necessary dependencies.
-npm i
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+[React Frontend] 
+       │
+       ▼
+[Polygon Worker] ──► [Polygon API]
+       │
+       ▼
+[OpenAI Worker] ──► [OpenAI API / AI Gateway]
 ```
 
-## What technologies are used for this project?
+This architecture keeps API keys off the client and ensures secure, scalable communication between the frontend and external APIs.
 
-This project is built with:
+## Environment Variables
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Cloudflare Workers
+- **Polygon Worker**
+  - `POLYGON_API_KEY`
 
-## Deployment
+- **OpenAI Worker**
+  - `OPENAI_API_KEY`
 
-Build the project for production:
+### Ticker-Briefly (Frontend)
+- `VITE_CLOUDFLARE_POLYGON_WORKER_URL`
+- `VITE_CLOUDFLARE_OPENAI_WORKER_URL`
 
-```bash
-npm run build
+These frontend variables point to the respective worker endpoints. The actual API keys remain securely stored in the workers.
+
+## Tech Stack
+
+- **Frontend:** React, Vite, TypeScript  
+- **Backend:** Python  
+- **APIs:** Polygon, OpenAI  
+- **Infrastructure:** Cloudflare Pages, Cloudflare Workers, Cloudflare AI Gateway  
+- **Deployment:** Continuous deployment on Cloudflare
+
+## Example Output
+
+```
+Ticker: AAPL, TSLA
+OK baby, here’s the read: AAPL glows steady—two up days, closing 249.34 after opening 246.60, with a daytime high near 251.82 and a rising VW. Demand looks persistent; the stock is riding a quiet momentum wave. If you’re shopping, this one leans BUY on pullbacks; otherwise HOLD if you already own and are riding the trend.
+
+TSLA stays lit as well, climbing from 426.79 to 435.15, with a high of 440.51 and hefty volume. The move is broader and more volatile, but momentum is improving. For new money, consider a cautious BUY on a dip toward 430–433; for current holders, a HOLD with a tight stop is prudent.
+
+Bottom line: both names show positive momentum, but stay disciplined; risk/reward favors buyers who can tolerate volatility.
 ```
